@@ -45,7 +45,7 @@ class Test < ChartTest
             STATIC_ENV: 'value_of_env'
           }
         }
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'STATIC_ENV'
+        jq('.spec.template.spec.containers[0]', resource('Deployment')).must_equal 'STATIC_ENV'
         jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'value_of_env'
       end
       it 'set "Dynamic/Tpl" environment variables' do
