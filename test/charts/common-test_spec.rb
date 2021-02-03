@@ -59,7 +59,7 @@ class Test < ChartTest
       it 'set "Dynamic/Tpl" environment variables' do
         values = {
           envTpl: {
-            DYN_ENV: '{{ .Release.Name }}-admin'
+            DYN_ENV: "{{ .Release.Name }}-admin"
           }
         }
         chart.value values
