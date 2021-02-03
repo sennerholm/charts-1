@@ -59,12 +59,12 @@ class Test < ChartTest
       it 'set "Dynamic/Tpl" environment variables' do
         values = {
           envTpl: {
-            DYN_ENV: "{{ .Release.Name }}-admin"
+            DYN_ENV: "{{ mytestvalue | upper }}"
           }
         }
         chart.value values
         jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'DYN_ENV'
-        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'template-admin'
+        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'MYTESTVALUE'
       end
     end
 
