@@ -42,7 +42,7 @@ class Test < ChartTest
       it 'Check no environment variables' do
         values = {}
         chart.value values
-        assert_nil(jq('.spec.template.spec.containers[0].env', resource('Deployment')))
+        jq('.spec.template.spec.containers[0].env', resource('Deployment')).must_equal nil
       end
 
       it 'set "static" environment variables' do
@@ -59,12 +59,12 @@ class Test < ChartTest
       it 'set "Dynamic/Tpl" environment variables' do
         values = {
           envTpl: {
-            DYN_ENV: "{{ mytestvalue | upper }}"
+            DYN_ENV: '{{ "mytestvalue" | upper }'
           }
         }
         chart.value values
         jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'DYN_ENV'
-        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'MYTESTVALUE'
+        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'template-admin'
       end
     end
 
