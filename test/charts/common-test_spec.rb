@@ -42,19 +42,19 @@ class Test < ChartTest
       it 'set "static" environment variables' do
         values = {
           env: {
-            name_of_env: 'value_of_env'
+            STATIC_ENV: 'value_of_env'
           }
         }
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'name_of_env'
+        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'STATIC_ENV'
         jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'value_of_env'
       end
       it 'set "Dynamic/Tpl" environment variables' do
         values = {
           envTpl: {
-            name_of_env: '{{ .Release.Name }}-admin'
+            DYN_ENV: '{{ .Release.Name }}-admin'
           }
         }
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'name_of_env'
+        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'DYN_ENV'
         jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'template-admin'
       end
     end
