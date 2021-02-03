@@ -42,7 +42,7 @@ class Test < ChartTest
       it 'Check no environment variables' do
         values = {}
         chart.value values
-        jq('.spec.template.spec.containers[0].env', resource('Deployment')).must_equal nil)
+        jq('.spec.template.spec.containers[0].env', resource('Deployment')).must_equal nil
       end
 
       it 'set "static" environment variables' do
