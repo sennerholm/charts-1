@@ -39,21 +39,30 @@ class Test < ChartTest
     end
 
     describe 'Environment settings' do
+      it 'Check no environment variables' do
+        values = {}
+        chart.value values
+        jq('.spec.template.spec.containers[0].env', resource('Deployment')).must_equal nil)
+      end
+
       it 'set "static" environment variables' do
         values = {
           env: {
             STATIC_ENV: 'value_of_env'
           }
         }
-        jq('.spec.template.spec.containers[0]', resource('Deployment')).must_equal 'STATIC_ENV'
+        chart.value values
+        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'STATIC_ENV'
         jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'value_of_env'
       end
+
       it 'set "Dynamic/Tpl" environment variables' do
         values = {
           envTpl: {
             DYN_ENV: '{{ .Release.Name }}-admin'
           }
         }
+        chart.value values
         jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'DYN_ENV'
         jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'template-admin'
       end
