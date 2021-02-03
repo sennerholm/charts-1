@@ -38,6 +38,27 @@ class Test < ChartTest
       end
     end
 
+    describe 'Environment settings' do
+      it 'set "static" environment variables' do
+        values = {
+          env: {
+            name_of_env: 'value_of_env'
+          }
+        }
+        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'name_of_env'
+        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'value_of_env'
+      end
+      it 'set "Dynamic/Tpl" environment variables' do
+        values = {
+          envTpl: {
+            name_of_env: '{{ .Release.Name }}-admin'
+          }
+        }
+        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal 'name_of_env'
+        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'template-admin'
+      end
+    end
+
     describe 'ports settings' do
       default_name = 'http'
       default_port = 8080
